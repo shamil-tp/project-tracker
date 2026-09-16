@@ -1,71 +1,71 @@
 import React from 'react';
-import { Users, GitBranch, BookOpen } from 'lucide-react';
+import { Users, GitBranch, ShieldCheck } from 'lucide-react';
 
-const cardStyles = [
-  { bg: '#F0C020', text: '#121212', iconBg: 'white' },
-  { bg: '#1040C0', text: 'white',   iconBg: '#F0C020' },
-  { bg: '#D02020', text: 'white',   iconBg: 'white' },
-];
-
-const StatCard = ({ title, value, icon: Icon, colors }) => (
-  <div
-    className="flex flex-col justify-between transition-transform duration-200 hover:-translate-y-1"
-    style={{
-      backgroundColor: colors.bg,
-      border: '4px solid #121212',
-      boxShadow: '8px 8px 0px 0px #121212',
-      padding: '32px',
-    }}
-  >
-    <div className="flex justify-between items-start mb-6">
-      <h3
-        className="text-xl md:text-2xl font-bold uppercase tracking-wider"
-        style={{
-          color: colors.text,
-          borderBottom: `4px solid ${colors.text}`,
-          paddingBottom: '8px',
-        }}
-      >
-        {title}
-      </h3>
+const StatCard = ({ label, value, sub, icon: Icon, iconBg, iconColor }) => (
+  <div className="nordic-card p-6 flex flex-col gap-4">
+    <div className="flex items-center justify-between">
+      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#71717A' }}>
+        {label}
+      </span>
       <div
-        style={{
-          backgroundColor: colors.iconBg,
-          border: '4px solid #121212',
-          boxShadow: '4px 4px 0px 0px #121212',
-          padding: '12px',
-          borderRadius: '9999px',
-        }}
+        className="w-8 h-8 rounded-lg flex items-center justify-center"
+        style={{ backgroundColor: iconBg }}
       >
-        <Icon className="w-7 h-7" strokeWidth={3} style={{ color: '#121212' }} />
+        <Icon className="w-4 h-4" strokeWidth={1.8} style={{ color: iconColor }} />
       </div>
     </div>
-    <p
-      className="text-7xl md:text-8xl font-black tracking-tighter"
-      style={{ color: colors.text, textShadow: `4px 4px 0 ${colors.text === 'white' ? '#0008' : '#0002'}` }}
-    >
-      {value}
-    </p>
+
+    <div>
+      <p className="text-3xl font-bold tracking-tight" style={{ color: '#18181B' }}>
+        {value}
+      </p>
+      <p className="text-xs mt-1" style={{ color: '#71717A' }}>
+        {sub}
+      </p>
+    </div>
   </div>
 );
 
 const StatsOverview = ({ students }) => {
-  const total       = students.length;
-  const withGithub  = students.filter(s => s['github-url']).length;
-  const totalRoles  = students.reduce((sum, s) => sum + (s['total-number-of-users'] || 0), 0);
+  const total = students.length;
+  const withGithub = students.filter(s => s['github-url']).length;
+  const totalRoles = students.reduce((n, s) => n + (s['total-number-of-users'] || 0), 0);
 
   const stats = [
-    { title: 'Submissions',  value: total,       icon: Users },
-    { title: 'Repositories', value: withGithub,  icon: GitBranch },
-    { title: 'Roles Defined',value: totalRoles,  icon: BookOpen },
+    {
+      label: 'Submissions',
+      value: total,
+      sub: 'Total student submissions',
+      icon: Users,
+      iconBg: 'rgba(79, 70, 229, 0.08)',
+      iconColor: '#4F46E5', // Primary Accent: Deep Indigo
+    },
+    {
+      label: 'Repositories',
+      value: withGithub,
+      sub: 'Linked GitHub repositories',
+      icon: GitBranch,
+      iconBg: 'rgba(14, 165, 233, 0.08)',
+      iconColor: '#0EA5E9', // Secondary Accent: Sky Blue
+    },
+    {
+      label: 'Roles Defined',
+      value: totalRoles,
+      sub: 'RBAC user levels configured',
+      icon: ShieldCheck,
+      iconBg: 'rgba(79, 70, 229, 0.08)',
+      iconColor: '#4F46E5',
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16">
-      {stats.map((s, i) => (
-        <StatCard key={s.title} {...s} colors={cardStyles[i]} />
-      ))}
-    </div>
+    <section className="mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        {stats.map(s => (
+          <StatCard key={s.label} {...s} />
+        ))}
+      </div>
+    </section>
   );
 };
 

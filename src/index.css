@@ -1,97 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @layer base {
   :root {
-    --bg-color: #F0F0F0;
-    --text-color: #121212;
-    --border-color: #121212;
-    --primary-red: #D02020;
-    --primary-blue: #1040C0;
-    --primary-yellow: #F0C020;
+    --background: #FAFAFA;
+    --surface: #FFFFFF;
+    --border: #E4E4E7;
+    --primary-accent: #4F46E5;
+    --secondary-accent: #0EA5E9;
+    --primary-text: #18181B;
+    --muted-text: #71717A;
   }
 
   body {
-    background-color: #F0F0F0;
-    color: #121212;
-    font-family: 'Outfit', sans-serif;
+    background-color: var(--background);
+    color: var(--primary-text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    text-transform: uppercase;
-    font-weight: 900;
-    letter-spacing: -0.05em;
-    line-height: 0.9;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: #121212;
-    color: white;
+    background-color: #4F46E5;
+    color: #ffffff;
   }
 }
 
-/* ─── Bauhaus Utility Classes ─────────────────────────────── */
-
-.bauhaus-card {
-  background-color: white;
-  border: 4px solid #121212;
-  box-shadow: 8px 8px 0px 0px #121212;
-  border-radius: 0;
-  transition: transform 0.2s ease-out;
+/* ─── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FAFAFA;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4D4D8;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A1A1AA;
 }
 
-.bauhaus-card:hover {
-  transform: translateY(-4px);
+/* ─── Linear / Vercel-style Utility Classes (Pure CSS) ────── */
+.nordic-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E4E4E7;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 4px 14px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.bauhaus-button {
-  border-radius: 0;
-  border: 4px solid #121212;
-  box-shadow: 4px 4px 0px 0px #121212;
-  transition: all 0.2s ease-out;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+.nordic-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.nordic-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  background-color: #4F46E5;
+  color: #FFFFFF;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  transition: all 0.18s ease;
   cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 1px 2px 0 rgba(79, 70, 229, 0.2);
 }
 
-.bauhaus-button:active {
-  transform: translate(2px, 2px);
-  box-shadow: none;
+.nordic-btn-primary:hover {
+  background-color: #4338CA;
+  box-shadow: 0 2px 6px 0 rgba(79, 70, 229, 0.3);
 }
 
-.bauhaus-input {
+.nordic-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.nordic-input {
   width: 100%;
-  background-color: white;
-  border: 4px solid #121212;
-  border-radius: 0;
-  padding: 14px 20px;
-  color: #121212;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 700;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  transition: all 0.2s ease-out;
+  background-color: #FFFFFF;
+  border: 1px solid #E4E4E7;
+  border-radius: 8px;
+  padding: 12px 16px 12px 42px;
+  color: #18181B;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
   outline: none;
 }
 
-.bauhaus-input::placeholder {
-  color: #888;
-  font-weight: 500;
+.nordic-input::placeholder {
+  color: #71717A;
 }
 
-.bauhaus-input:focus {
-  box-shadow: 4px 4px 0px 0px #121212;
+.nordic-input:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
-
-/* ─── Scrollbar ───────────────────────────────────────────── */
-
-::-webkit-scrollbar { width: 12px; }
-::-webkit-scrollbar-track { background: #F0F0F0; border-left: 2px solid #121212; }
-::-webkit-scrollbar-thumb { background: #121212; }

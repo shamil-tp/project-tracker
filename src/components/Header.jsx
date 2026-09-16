@@ -1,66 +1,68 @@
 import React from 'react';
-import { LayoutDashboard } from 'lucide-react';
+import { Layers } from 'lucide-react';
 
-const Header = () => {
-  return (
-    <header
-      style={{ backgroundColor: '#1040C0', borderBottom: '4px solid #121212', boxShadow: '0px 8px 0px 0px #121212' }}
-      className="mb-12"
-    >
-      <div className="max-w-7xl mx-auto px-6 py-8 md:py-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        {/* Logo + Title */}
-        <div className="flex items-center gap-4">
-          <div
-            style={{
-              backgroundColor: '#F0C020',
-              border: '4px solid #121212',
-              boxShadow: '4px 4px 0px 0px #121212',
-              padding: '12px',
-              borderRadius: '9999px',
-            }}
-          >
-            <LayoutDashboard className="w-8 h-8 md:w-10 md:h-10" strokeWidth={3} style={{ color: '#121212' }} />
-          </div>
-          <div>
-            <h1
-              className="text-4xl md:text-6xl lg:text-7xl"
-              style={{ color: 'white', textShadow: '4px 4px 0 #121212' }}
-            >
-              RBAC
-            </h1>
-            <p
-              className="text-xl md:text-3xl font-bold uppercase tracking-widest"
-              style={{ color: 'white', textShadow: '2px 2px 0 #121212', lineHeight: 1.2 }}
-            >
-              Project Dashboard
-            </p>
-          </div>
-        </div>
-
-        {/* Live badge */}
+const Header = () => (
+  <header
+    className="sticky top-0 z-50 mb-12"
+    style={{
+      backgroundColor: 'rgba(255, 255, 255, 0.85)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      borderBottom: '1px solid #E4E4E7',
+    }}
+  >
+    <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      {/* Brand / Logo */}
+      <div className="flex items-center gap-3">
         <div
-          style={{
-            backgroundColor: 'white',
-            border: '4px solid #121212',
-            boxShadow: '4px 4px 0px 0px #121212',
-            padding: '10px 20px',
-          }}
-          className="flex items-center gap-3"
+          className="flex items-center justify-center w-9 h-9 rounded-lg"
+          style={{ backgroundColor: '#4F46E5' }}
         >
-          <div
-            className="w-4 h-4 rounded-full animate-pulse"
-            style={{ backgroundColor: '#D02020', border: '2px solid #121212' }}
-          ></div>
+          <Layers className="w-4 h-4 text-white" strokeWidth={2} />
+        </div>
+        <div>
           <span
-            className="font-bold uppercase tracking-widest text-sm"
-            style={{ color: '#121212' }}
+            className="text-base font-semibold tracking-tight block leading-tight"
+            style={{ color: '#18181B' }}
           >
-            System Active
+            RBAC Tracker
+          </span>
+          <span
+            className="text-xs font-medium tracking-wide block"
+            style={{ color: '#71717A' }}
+          >
+            Evaluation & Progress Dashboard
           </span>
         </div>
       </div>
-    </header>
-  );
-};
+
+      {/* Live Status Pill */}
+      <div
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full"
+        style={{
+          backgroundColor: '#FAFAFA',
+          border: '1px solid #E4E4E7',
+        }}
+      >
+        <span className="relative flex w-2 h-2">
+          <span
+            className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+            style={{ backgroundColor: '#10B981' }}
+          />
+          <span
+            className="relative inline-flex rounded-full w-2 h-2"
+            style={{ backgroundColor: '#10B981' }}
+          />
+        </span>
+        <span
+          className="text-xs font-medium tracking-wider uppercase"
+          style={{ color: '#71717A' }}
+        >
+          Active
+        </span>
+      </div>
+    </div>
+  </header>
+);
 
 export default Header;
