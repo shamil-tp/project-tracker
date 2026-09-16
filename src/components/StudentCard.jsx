@@ -4,7 +4,7 @@ import { GitBranch, Users, ArrowUpRight } from 'lucide-react';
 const StudentCard = React.memo(({ student }) => {
   // Gracefully support normalized model or raw keys
   const name = student.name || student['Name :'] || student['Name:'] || student['Full Name'] || 'Student';
-  const rollno = student.rollno ?? student['Roll No:'] ?? student['Roll No'] ?? student['Roll Number'] ?? 'N/A';
+  const rollno = student.rollno ?? student['Roll No:'] ?? student['Roll No'] ?? student['Roll Number'] ?? student['Roll No: [eg- 26PSCA01]'] ?? 'N/A';
   const projectTitle = student.projectTitle || student['Project Title'] || student['project-title'] || 'Untitled Project';
   const projectDescription = student.projectDescription || student['Project Description'] || student['project-description'] || '';
   const totalUsers = student.totalUsers ?? student['Total Number of users:'] ?? student['total-number-of-users'] ?? 0;

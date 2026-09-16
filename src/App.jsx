@@ -33,7 +33,10 @@ const fetchStudents = (url) => {
         }
         return res.json();
       })
-      .then((data) => (Array.isArray(data) ? data.map(normalizeStudent).filter(Boolean) : []))
+      .then((data) => {
+        console.log(data)
+        return Array.isArray(data) ? data.map(normalizeStudent).filter(Boolean) : []
+      })
       .catch((error) => {
         // Do not retain a failed request: a later mount can retry normally.
         studentsRequest = undefined;
@@ -124,7 +127,7 @@ function App() {
 
     return students.filter((s) => {
       const name = String(s.name || s['Name :'] || '').toLowerCase();
-      const rollno = String(s.rollno ?? s['Roll No:'] ?? '').toLowerCase();
+      const rollno = String(s.rollno ?? s['Roll No:'] ?? s['Roll No: [eg- 26PSCA01]'] ?? '').toLowerCase();
       const title = String(s.projectTitle || s['Project Title'] || '').toLowerCase();
 
       let allTags = '';

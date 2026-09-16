@@ -18,6 +18,7 @@ export function normalizeStudent(raw, index = 0) {
   const rawRoll =
     raw['Roll No:'] ??
     raw['Roll No'] ??
+    raw['Roll No: [eg- 26PSCA01]'] ??
     raw['Roll Number'] ??
     raw['rollno'] ??
     '';
