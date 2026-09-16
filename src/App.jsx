@@ -26,7 +26,13 @@ let studentsRequest;
 
 const fetchStudents = (url) => {
   if (!studentsRequest) {
-    studentsRequest = fetch(url, { cache: 'force-cache' })
+    // Google Apps Script and intermediary caches can otherwise serve an older
+    // sheet response after a page refresh. A unique query value makes this a
+    // fresh request; localStorage remains only a temporary loading fallback.
+    const separator = url.includes('?') ? '&' : '?';
+    const freshUrl = `${url}${separator}_=${Date.now()}`;
+
+    studentsRequest = fetch(freshUrl, { cache: 'no-store' })
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}: Failed to fetch from Google Sheets endpoint`);
@@ -34,7 +40,7 @@ const fetchStudents = (url) => {
         return res.json();
       })
       .then((data) => {
-        console.log(data)
+        // console.log(data)
         return Array.isArray(data) ? data.map(normalizeStudent).filter(Boolean) : []
       })
       .catch((error) => {
