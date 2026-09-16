@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Users, Github, BookOpen } from 'lucide-react';
 
 const StatCard = ({ title, value, icon: Icon, colorClass }) => (
   <div className="glass rounded-2xl p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-default bg-[#FFFFFF]">
@@ -15,8 +15,8 @@ const StatCard = ({ title, value, icon: Icon, colorClass }) => (
 
 const StatsOverview = ({ students }) => {
   const total = students.length;
-  const completed = students.filter(s => s["Implementation Status"]?.toLowerCase().includes("complete") || s["Implementation Status"]?.toLowerCase().includes("integrated")).length;
-  const blocked = students.filter(s => s["Current Blockers"] && s["Current Blockers"].trim().length > 0 && s["Current Blockers"].toLowerCase() !== "none").length;
+  const withGithub = students.filter(s => s["github-url"]).length;
+  const totalUsersRoles = students.reduce((sum, s) => sum + (s["total-number-of-users"] || 0), 0);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -27,16 +27,16 @@ const StatsOverview = ({ students }) => {
         colorClass={{ bg: 'bg-indigo-50', text: 'text-[#4F46E5]' }}
       />
       <StatCard 
-        title="Completed" 
-        value={completed} 
-        icon={CheckCircle2}
-        colorClass={{ bg: 'bg-emerald-50', text: 'text-emerald-600' }}
+        title="Repositories Linked" 
+        value={withGithub} 
+        icon={Github}
+        colorClass={{ bg: 'bg-sky-50', text: 'text-[#0EA5E9]' }}
       />
       <StatCard 
-        title="Blocked / Stuck" 
-        value={blocked} 
-        icon={AlertCircle}
-        colorClass={{ bg: 'bg-rose-50', text: 'text-rose-600' }}
+        title="Total Roles Modeled" 
+        value={totalUsersRoles} 
+        icon={BookOpen}
+        colorClass={{ bg: 'bg-emerald-50', text: 'text-emerald-600' }}
       />
     </div>
   );

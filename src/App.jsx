@@ -10,7 +10,6 @@ function App() {
   const [error, setError] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState('All');
 
   // Simulated fetch from Google Apps Script endpoint
   useEffect(() => {
@@ -20,46 +19,34 @@ function App() {
         
         const mockData = [
           {
-            "Timestamp": "2026-09-16T08:00:00Z",
-            "Full Name": "John Doe",
-            "Roll Number": "CS2026-042",
-            "Email Address": "john@university.edu",
-            "Project Title": "Hospital Management RBAC",
-            "GitHub Repository URL": "https://github.com/example/rbac-app",
-            "Hosted Live Demo URL": "https://rbac-demo.vercel.app",
-            "Tech Stack": "React, Express, MySQL, JWT, Tailwind",
-            "Implemented Roles": "Admin, Doctor, Patient, Desk Staff",
-            "Implementation Status": "Middleware & Role Checking Complete",
-            "Working Features": "JWT auth flow working, route guards in React operational.",
-            "Current Blockers": "Struggling with complex MySQL JOIN queries for permission mapping."
+            "name": "John Doe",
+            "rollno": "CS2026-042",
+            "project-title": "Hospital Management RBAC",
+            "project-description": "A comprehensive web application designed to manage hospital resources, track patient records, and coordinate staff schedules securely with multi-level role access.",
+            "github-url": "https://github.com/example/rbac-app",
+            "total-number-of-users": 4,
+            "tech-stack": ["React", "Express", "MySQL", "JWT"],
+            "additional-technologies": ["Tailwind CSS", "Docker"]
           },
           {
-            "Timestamp": "2026-09-16T09:15:00Z",
-            "Full Name": "Sarah Connor",
-            "Roll Number": "CS2026-015",
-            "Email Address": "sarah@university.edu",
-            "Project Title": "E-Learning Platform",
-            "GitHub Repository URL": "https://github.com/example/elearning-rbac",
-            "Hosted Live Demo URL": "",
-            "Tech Stack": "React, Node.js, MongoDB, JWT",
-            "Implemented Roles": "Admin, Instructor, Student",
-            "Implementation Status": "Schema & Auth Design",
-            "Working Features": "Basic user registration and login.",
-            "Current Blockers": "None"
+            "name": "Sarah Connor",
+            "rollno": "CS2026-015",
+            "project-title": "E-Learning Platform",
+            "project-description": "An interactive online learning portal that allows students to enroll in courses and instructors to upload materials and grade assignments.",
+            "github-url": "https://github.com/example/elearning-rbac",
+            "total-number-of-users": 3,
+            "tech-stack": ["React", "Node.js", "MongoDB", "JWT"],
+            "additional-technologies": ["Material UI", "Redis"]
           },
           {
-            "Timestamp": "2026-09-16T10:30:00Z",
-            "Full Name": "Alex Chen",
-            "Roll Number": "CS2026-088",
-            "Email Address": "alex@university.edu",
-            "Project Title": "Inventory System",
-            "GitHub Repository URL": "https://github.com/example/inventory",
-            "Hosted Live Demo URL": "https://inventory-demo.vercel.app",
-            "Tech Stack": "React, Express, PostgreSQL, Tailwind",
-            "Implemented Roles": "SuperAdmin, Manager, Staff",
-            "Implementation Status": "Integrated & Testing Complete",
-            "Working Features": "Full RBAC with dynamic menu rendering and API protection.",
-            "Current Blockers": "None"
+            "name": "Alex Chen",
+            "rollno": "CS2026-088",
+            "project-title": "Inventory Management System",
+            "project-description": "A robust system for retail businesses to track stock levels, manage suppliers, and process orders with distinct permissions for managers and floor staff.",
+            "github-url": "https://github.com/example/inventory",
+            "total-number-of-users": 3,
+            "tech-stack": ["React", "Express", "PostgreSQL"],
+            "additional-technologies": ["Tailwind CSS", "TypeScript"]
           }
         ];
         
@@ -78,27 +65,17 @@ function App() {
   const filteredStudents = useMemo(() => {
     return students.filter(student => {
       const query = searchQuery.toLowerCase();
-      const matchesSearch = 
-        student["Full Name"]?.toLowerCase().includes(query) ||
-        student["Roll Number"]?.toLowerCase().includes(query) ||
-        student["Tech Stack"]?.toLowerCase().includes(query) ||
-        student["Project Title"]?.toLowerCase().includes(query);
+      
+      const allTags = [...(student["tech-stack"] || []), ...(student["additional-technologies"] || [])].join(' ').toLowerCase();
 
-      let matchesFilter = true;
-      if (filterStatus !== 'All') {
-        const status = student["Implementation Status"]?.toLowerCase() || '';
-        if (filterStatus === 'Schema' && !status.includes('schema') && !status.includes('auth')) {
-          matchesFilter = false;
-        } else if (filterStatus === 'Middleware' && !status.includes('middleware') && !status.includes('routing')) {
-          matchesFilter = false;
-        } else if (filterStatus === 'Complete' && !status.includes('complete') && !status.includes('integrated')) {
-          matchesFilter = false;
-        }
-      }
-
-      return matchesSearch && matchesFilter;
+      return (
+        student.name?.toLowerCase().includes(query) ||
+        student.rollno?.toLowerCase().includes(query) ||
+        student["project-title"]?.toLowerCase().includes(query) ||
+        allTags.includes(query)
+      );
     });
-  }, [students, searchQuery, filterStatus]);
+  }, [students, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] font-sans text-[#18181B] p-4 md:p-8">
@@ -130,8 +107,6 @@ function App() {
             <FilterBar 
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
-              filterStatus={filterStatus}
-              setFilterStatus={setFilterStatus}
             />
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -141,7 +116,7 @@ function App() {
                 ))
               ) : (
                 <div className="col-span-full py-12 text-center text-[#71717A]">
-                  No projects found matching your search or filter criteria.
+                  No projects found matching your search.
                 </div>
               )}
             </div>
