@@ -29,43 +29,56 @@ function App() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        await new Promise((r) => setTimeout(r, 800));
+        // await new Promise((r) => setTimeout(r, 800));
+        const API_URL = import.meta.env.VITE_GOOGLE_SHEETS_API_URL;
 
-        setStudents([
-          {
-            name: 'John Doe',
-            rollno: 'CS2026-042',
-            'project-title': 'Hospital Management RBAC',
-            'project-description':
-              'A comprehensive web application to manage hospital resources, patient records, and staff schedules with multi-level role access control.',
-            'github-url': 'https://github.com/example/rbac-app',
-            'total-number-of-users': 4,
-            'tech-stack': ['React', 'Express', 'MySQL', 'JWT'],
-            'additional-technologies': ['Tailwind CSS', 'Docker'],
-          },
-          {
-            name: 'Sarah Connor',
-            rollno: 'CS2026-015',
-            'project-title': 'E-Learning Platform',
-            'project-description':
-              'An interactive online learning portal that allows students to enroll in courses and instructors to upload materials and evaluate assignments.',
-            'github-url': 'https://github.com/example/elearning-rbac',
-            'total-number-of-users': 3,
-            'tech-stack': ['React', 'Node.js', 'MongoDB', 'JWT'],
-            'additional-technologies': ['Material UI', 'Redis'],
-          },
-          {
-            name: 'Alex Chen',
-            rollno: 'CS2026-088',
-            'project-title': 'Inventory Management System',
-            'project-description':
-              'A robust retail stock system to track product inventory, supplier orders, and store staff permissions across departments.',
-            'github-url': 'https://github.com/example/inventory',
-            'total-number-of-users': 3,
-            'tech-stack': ['React', 'Express', 'PostgreSQL'],
-            'additional-technologies': ['Tailwind CSS', 'TypeScript'],
-          },
-        ]);
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Fetched Student Data:', data);
+        setStudents(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching data:', err);
+        setLoading(false);
+      });
+
+        // setStudents([
+        //   {
+        //     name: 'John Doe',
+        //     rollno: 'CS2026-042',
+        //     'project-title': 'Hospital Management RBAC',
+        //     'project-description':
+        //       'A comprehensive web application to manage hospital resources, patient records, and staff schedules with multi-level role access control.',
+        //     'github-url': 'https://github.com/example/rbac-app',
+        //     'total-number-of-users': 4,
+        //     'tech-stack': ['React', 'Express', 'MySQL', 'JWT'],
+        //     'additional-technologies': ['Tailwind CSS', 'Docker'],
+        //   },
+        //   {
+        //     name: 'Sarah Connor',
+        //     rollno: 'CS2026-015',
+        //     'project-title': 'E-Learning Platform',
+        //     'project-description':
+        //       'An interactive online learning portal that allows students to enroll in courses and instructors to upload materials and evaluate assignments.',
+        //     'github-url': 'https://github.com/example/elearning-rbac',
+        //     'total-number-of-users': 3,
+        //     'tech-stack': ['React', 'Node.js', 'MongoDB', 'JWT'],
+        //     'additional-technologies': ['Material UI', 'Redis'],
+        //   },
+        //   {
+        //     name: 'Alex Chen',
+        //     rollno: 'CS2026-088',
+        //     'project-title': 'Inventory Management System',
+        //     'project-description':
+        //       'A robust retail stock system to track product inventory, supplier orders, and store staff permissions across departments.',
+        //     'github-url': 'https://github.com/example/inventory',
+        //     'total-number-of-users': 3,
+        //     'tech-stack': ['React', 'Express', 'PostgreSQL'],
+        //     'additional-technologies': ['Tailwind CSS', 'TypeScript'],
+        //   },
+        // ]);
         setLoading(false);
       } catch (e) {
         setError('Failed to load project data. Please verify your connection.');
