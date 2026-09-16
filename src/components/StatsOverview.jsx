@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Users, GitBranch, ShieldCheck } from 'lucide-react';
 
 const StatCard = ({ label, value, sub, icon: Icon, iconBg, iconColor }) => (
@@ -27,28 +27,29 @@ const StatCard = ({ label, value, sub, icon: Icon, iconBg, iconColor }) => (
 );
 
 const StatsOverview = ({ students = [] }) => {
-  const total = students.length;
+  const stats = useMemo(() => {
+    const total = students.length;
 
-  const withGithub = students.filter((s) => {
-    const url =
-      s.githubUrl ||
-      s['github url'] ||
-      s['github-url'] ||
-      s['GitHub Repository URL'];
-    return Boolean(url && String(url).trim());
-  }).length;
+    const withGithub = students.filter((s) => {
+      const url =
+        s.githubUrl ||
+        s['github url'] ||
+        s['github-url'] ||
+        s['GitHub Repository URL'];
+      return Boolean(url && String(url).trim());
+    }).length;
 
-  const totalRoles = students.reduce((sum, s) => {
-    const val =
-      s.totalUsers ??
-      s['Total Number of users:'] ??
-      s['Total Number of users'] ??
-      s['total-number-of-users'] ??
-      0;
-    return sum + (Number(val) || 0);
-  }, 0);
+    const totalRoles = students.reduce((sum, s) => {
+      const val =
+        s.totalUsers ??
+        s['Total Number of users:'] ??
+        s['Total Number of users'] ??
+        s['total-number-of-users'] ??
+        0;
+      return sum + (Number(val) || 0);
+    }, 0);
 
-  const stats = [
+    return [
     {
       label: 'Submissions',
       value: total,
@@ -73,7 +74,8 @@ const StatsOverview = ({ students = [] }) => {
       iconBg: 'rgba(79, 70, 229, 0.08)',
       iconColor: '#4F46E5',
     },
-  ];
+    ];
+  }, [students]);
 
   return (
     <section className="mb-10">

@@ -21,6 +21,29 @@ const GridSkeleton = () => (
   </div>
 );
 
+const CACHE_KEY = 'rbac_students_cache';
+let studentsRequest;
+
+const fetchStudents = (url) => {
+  if (!studentsRequest) {
+    studentsRequest = fetch(url, { cache: 'force-cache' })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: Failed to fetch from Google Sheets endpoint`);
+        }
+        return res.json();
+      })
+      .then((data) => (Array.isArray(data) ? data.map(normalizeStudent).filter(Boolean) : []))
+      .catch((error) => {
+        // Do not retain a failed request: a later mount can retry normally.
+        studentsRequest = undefined;
+        throw error;
+      });
+  }
+
+  return studentsRequest;
+};
+
 function App() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,27 +51,34 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      setError(null);
+    let isMounted = true;
 
+    // 1. Instant Cache Load (Stale-While-Revalidate)
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    if (cachedData) {
+      try {
+        const parsed = JSON.parse(cachedData);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setStudents(parsed);
+          setLoading(false); // Immediate 0ms rendering from cache!
+        }
+      } catch (e) {
+        console.warn('Failed to parse cache:', e);
+      }
+    }
+
+    // 2. Fast background revalidation / initial fetch
+    const loadData = async () => {
       try {
         const API_URL = import.meta.env.VITE_GOOGLE_SHEETS_API_URL;
 
         if (API_URL) {
-          // const res = await fetch(API_URL);
-          const res = await fetch(`${API_URL}?ts=${Date.now()}`);
-          if (!res.ok) {
-            throw new Error(`HTTP ${res.status}: Failed to fetch from Google Sheets endpoint`);
-          }
-          const data = await res.json();
-          console.log('Fetched Student Data:', data);
+          const normalized = await fetchStudents(API_URL);
 
-          if (Array.isArray(data)) {
-            const normalized = data.map(normalizeStudent).filter(Boolean);
+          if (isMounted) {
             setStudents(normalized);
-          } else {
-            setStudents([]);
+            // Save to localStorage for instant subsequent loads
+            localStorage.setItem(CACHE_KEY, JSON.stringify(normalized));
           }
         } else {
           // Fallback sample data if no environment variable is provided
@@ -64,17 +94,28 @@ function App() {
               "Additional Technologies and Tech Stack Used:": "JWT, bcrypt / bcryptjs / argon, Prisma ORM, Tailwind CSS, Redux, Node mailer, Axios, Nodemon, TypeScript, CORS"
             }
           ];
-          setStudents(sampleData.map(normalizeStudent));
+          const normalized = sampleData.map(normalizeStudent);
+          if (isMounted) {
+            setStudents(normalized);
+          }
         }
       } catch (err) {
         console.error('Error loading student data:', err);
-        setError(err.message || 'Failed to load project data.');
+        if (isMounted) {
+          setError(err.message || 'Failed to load project data.');
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const filteredStudents = useMemo(() => {
@@ -107,7 +148,7 @@ function App() {
       <Header />
 
       <main className="max-w-6xl mx-auto px-6 md:px-8">
-        {loading ? (
+        {loading && students.length === 0 ? (
           <div className="space-y-8">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -117,7 +158,7 @@ function App() {
             <Skeleton className="h-11 max-w-xl" />
             <GridSkeleton />
           </div>
-        ) : error ? (
+        ) : error && students.length === 0 ? (
           <div
             className="rounded-xl p-6 text-center"
             style={{ backgroundColor: '#FFF5F5', border: '1px solid #FED7D7' }}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { GitBranch, Users, ArrowUpRight } from 'lucide-react';
 
-const StudentCard = ({ student }) => {
+const StudentCard = React.memo(({ student }) => {
   // Gracefully support normalized model or raw keys
   const name = student.name || student['Name :'] || student['Name:'] || student['Full Name'] || 'Student';
   const rollno = student.rollno ?? student['Roll No:'] ?? student['Roll No'] ?? student['Roll Number'] ?? 'N/A';
@@ -137,6 +137,6 @@ const StudentCard = ({ student }) => {
       </div>
     </article>
   );
-};
+});
 
 export default StudentCard;
