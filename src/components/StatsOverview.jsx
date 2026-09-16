@@ -26,10 +26,27 @@ const StatCard = ({ label, value, sub, icon: Icon, iconBg, iconColor }) => (
   </div>
 );
 
-const StatsOverview = ({ students }) => {
+const StatsOverview = ({ students = [] }) => {
   const total = students.length;
-  const withGithub = students.filter(s => s['github-url']).length;
-  const totalRoles = students.reduce((n, s) => n + (s['total-number-of-users'] || 0), 0);
+
+  const withGithub = students.filter((s) => {
+    const url =
+      s.githubUrl ||
+      s['github url'] ||
+      s['github-url'] ||
+      s['GitHub Repository URL'];
+    return Boolean(url && String(url).trim());
+  }).length;
+
+  const totalRoles = students.reduce((sum, s) => {
+    const val =
+      s.totalUsers ??
+      s['Total Number of users:'] ??
+      s['Total Number of users'] ??
+      s['total-number-of-users'] ??
+      0;
+    return sum + (Number(val) || 0);
+  }, 0);
 
   const stats = [
     {
@@ -61,7 +78,7 @@ const StatsOverview = ({ students }) => {
   return (
     <section className="mb-10">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        {stats.map(s => (
+        {stats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
       </div>

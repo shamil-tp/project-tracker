@@ -3,6 +3,7 @@ import Header from './components/Header';
 import StatsOverview from './components/StatsOverview';
 import FilterBar from './components/FilterBar';
 import StudentCard from './components/StudentCard';
+import { normalizeStudent } from './utils/normalizeStudent';
 
 /* ── Skeletons ── */
 const Skeleton = ({ className }) => (
@@ -28,63 +29,50 @@ function App() {
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        // await new Promise((r) => setTimeout(r, 800));
         const API_URL = import.meta.env.VITE_GOOGLE_SHEETS_API_URL;
 
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Fetched Student Data:', data);
-        setStudents(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching data:', err);
-        setLoading(false);
-      });
+        if (API_URL) {
+          const res = await fetch(API_URL);
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: Failed to fetch from Google Sheets endpoint`);
+          }
+          const data = await res.json();
+          console.log('Fetched Student Data:', data);
 
-        // setStudents([
-        //   {
-        //     name: 'John Doe',
-        //     rollno: 'CS2026-042',
-        //     'project-title': 'Hospital Management RBAC',
-        //     'project-description':
-        //       'A comprehensive web application to manage hospital resources, patient records, and staff schedules with multi-level role access control.',
-        //     'github-url': 'https://github.com/example/rbac-app',
-        //     'total-number-of-users': 4,
-        //     'tech-stack': ['React', 'Express', 'MySQL', 'JWT'],
-        //     'additional-technologies': ['Tailwind CSS', 'Docker'],
-        //   },
-        //   {
-        //     name: 'Sarah Connor',
-        //     rollno: 'CS2026-015',
-        //     'project-title': 'E-Learning Platform',
-        //     'project-description':
-        //       'An interactive online learning portal that allows students to enroll in courses and instructors to upload materials and evaluate assignments.',
-        //     'github-url': 'https://github.com/example/elearning-rbac',
-        //     'total-number-of-users': 3,
-        //     'tech-stack': ['React', 'Node.js', 'MongoDB', 'JWT'],
-        //     'additional-technologies': ['Material UI', 'Redis'],
-        //   },
-        //   {
-        //     name: 'Alex Chen',
-        //     rollno: 'CS2026-088',
-        //     'project-title': 'Inventory Management System',
-        //     'project-description':
-        //       'A robust retail stock system to track product inventory, supplier orders, and store staff permissions across departments.',
-        //     'github-url': 'https://github.com/example/inventory',
-        //     'total-number-of-users': 3,
-        //     'tech-stack': ['React', 'Express', 'PostgreSQL'],
-        //     'additional-technologies': ['Tailwind CSS', 'TypeScript'],
-        //   },
-        // ]);
-        setLoading(false);
-      } catch (e) {
-        setError('Failed to load project data. Please verify your connection.');
+          if (Array.isArray(data)) {
+            const normalized = data.map(normalizeStudent).filter(Boolean);
+            setStudents(normalized);
+          } else {
+            setStudents([]);
+          }
+        } else {
+          // Fallback sample data if no environment variable is provided
+          const sampleData = [
+            {
+              "Timestamp": "2026-09-16T16:57:13.000Z",
+              "Name :": "Shamil T P",
+              "Roll No:": 23,
+              "Project Title": "Fedora Work Station",
+              "Project Description": "Unix based operating Work Station software",
+              "github url": "github.com/shamil-tp/student-list-php",
+              "Total Number of users:": 5,
+              "Additional Technologies and Tech Stack Used:": "JWT, bcrypt / bcryptjs / argon, Prisma ORM, Tailwind CSS, Redux, Node mailer, Axios, Nodemon, TypeScript, CORS"
+            }
+          ];
+          setStudents(sampleData.map(normalizeStudent));
+        }
+      } catch (err) {
+        console.error('Error loading student data:', err);
+        setError(err.message || 'Failed to load project data.');
+      } finally {
         setLoading(false);
       }
     };
+
     loadData();
   }, []);
 
@@ -93,17 +81,21 @@ function App() {
     if (!q) return students;
 
     return students.filter((s) => {
-      const allTags = [
-        ...(s['tech-stack'] || []),
-        ...(s['additional-technologies'] || []),
-      ]
-        .join(' ')
-        .toLowerCase();
+      const name = String(s.name || s['Name :'] || '').toLowerCase();
+      const rollno = String(s.rollno ?? s['Roll No:'] ?? '').toLowerCase();
+      const title = String(s.projectTitle || s['Project Title'] || '').toLowerCase();
+
+      let allTags = '';
+      if (Array.isArray(s.tags)) {
+        allTags = s.tags.join(' ').toLowerCase();
+      } else {
+        allTags = String(s['Additional Technologies and Tech Stack Used:'] || '').toLowerCase();
+      }
 
       return (
-        s.name?.toLowerCase().includes(q) ||
-        s.rollno?.toLowerCase().includes(q) ||
-        s['project-title']?.toLowerCase().includes(q) ||
+        name.includes(q) ||
+        rollno.includes(q) ||
+        title.includes(q) ||
         allTags.includes(q)
       );
     });
@@ -130,6 +122,7 @@ function App() {
             style={{ backgroundColor: '#FFF5F5', border: '1px solid #FED7D7' }}
           >
             <p className="text-sm font-medium text-red-700">{error}</p>
+            <p className="text-xs text-red-500 mt-1">Please check your network and Google Apps Script permissions.</p>
           </div>
         ) : (
           <>
@@ -154,7 +147,7 @@ function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredStudents.length > 0 ? (
                 filteredStudents.map((student, i) => (
-                  <StudentCard key={student.rollno || i} student={student} />
+                  <StudentCard key={student.id || student.rollno || i} student={student} />
                 ))
               ) : (
                 <div

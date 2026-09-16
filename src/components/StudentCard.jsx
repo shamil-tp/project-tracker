@@ -2,9 +2,34 @@ import React from 'react';
 import { GitBranch, Users, ArrowUpRight } from 'lucide-react';
 
 const StudentCard = ({ student }) => {
-  const techStack = Array.isArray(student['tech-stack']) ? student['tech-stack'] : [];
-  const addTech = Array.isArray(student['additional-technologies']) ? student['additional-technologies'] : [];
-  const allTags = [...techStack, ...addTech];
+  // Gracefully support normalized model or raw keys
+  const name = student.name || student['Name :'] || student['Name:'] || student['Full Name'] || 'Student';
+  const rollno = student.rollno ?? student['Roll No:'] ?? student['Roll No'] ?? student['Roll Number'] ?? 'N/A';
+  const projectTitle = student.projectTitle || student['Project Title'] || student['project-title'] || 'Untitled Project';
+  const projectDescription = student.projectDescription || student['Project Description'] || student['project-description'] || '';
+  const totalUsers = student.totalUsers ?? student['Total Number of users:'] ?? student['total-number-of-users'] ?? 0;
+
+  // GitHub URL with safe protocol handling (prepends https:// if missing)
+  let githubUrl = student.githubUrl || student['github url'] || student['github-url'] || student['GitHub Repository URL'] || '';
+  if (githubUrl && !githubUrl.startsWith('http://') && !githubUrl.startsWith('https://')) {
+    githubUrl = `https://${githubUrl}`;
+  }
+
+  // Tags: support parsed array or comma-separated string
+  let tags = [];
+  if (Array.isArray(student.tags)) {
+    tags = student.tags;
+  } else {
+    const rawTech = student['Additional Technologies and Tech Stack Used:'] || student['Tech Stack'] || student['tech-stack'] || '';
+    if (typeof rawTech === 'string' && rawTech.trim()) {
+      tags = rawTech.split(',').map(t => t.trim()).filter(Boolean);
+    } else if (Array.isArray(rawTech)) {
+      tags = [...rawTech];
+    }
+    if (Array.isArray(student['additional-technologies'])) {
+      tags = [...tags, ...student['additional-technologies']];
+    }
+  }
 
   return (
     <article className="nordic-card p-6 flex flex-col justify-between h-full">
@@ -16,13 +41,13 @@ const StudentCard = ({ student }) => {
               className="text-base font-semibold tracking-tight leading-snug"
               style={{ color: '#18181B' }}
             >
-              {student.name}
+              {name}
             </h3>
             <p
               className="text-xs font-mono font-medium mt-0.5"
               style={{ color: '#71717A' }}
             >
-              {student.rollno}
+              Roll No: {rollno}
             </p>
           </div>
 
@@ -35,7 +60,7 @@ const StudentCard = ({ student }) => {
             }}
           >
             <Users className="w-3.5 h-3.5" strokeWidth={1.8} style={{ color: '#71717A' }} />
-            <span>{student['total-number-of-users']} roles</span>
+            <span>{totalUsers} {totalUsers === 1 ? 'role' : 'roles'}</span>
           </div>
         </div>
 
@@ -48,20 +73,26 @@ const StudentCard = ({ student }) => {
             className="text-sm font-semibold tracking-tight"
             style={{ color: '#18181B' }}
           >
-            {student['project-title']}
+            {projectTitle}
           </h4>
-          <p
-            className="text-xs leading-relaxed line-clamp-3"
-            style={{ color: '#71717A' }}
-          >
-            {student['project-description']}
-          </p>
+          {projectDescription ? (
+            <p
+              className="text-xs leading-relaxed line-clamp-3"
+              style={{ color: '#71717A' }}
+            >
+              {projectDescription}
+            </p>
+          ) : (
+            <p className="text-xs italic" style={{ color: '#A1A1AA' }}>
+              No description provided.
+            </p>
+          )}
         </div>
 
         {/* Secondary Accent Tags: Sky Blue (#0EA5E9) for tech stack & additional tech */}
-        {allTags.length > 0 && (
+        {tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-6">
-            {allTags.map((tech, i) => (
+            {tags.map((tech, i) => (
               <span
                 key={i}
                 className="text-xs font-medium px-2 py-0.5 rounded-md inline-flex items-center"
@@ -80,9 +111,9 @@ const StudentCard = ({ student }) => {
 
       {/* Action Button: Primary Accent (#4F46E5 Deep Indigo) */}
       <div className="pt-2">
-        {student['github-url'] ? (
+        {githubUrl ? (
           <a
-            href={student['github-url']}
+            href={githubUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="nordic-btn-primary w-full"
