@@ -6,66 +6,92 @@
     --bg-color: #F0F0F0;
     --text-color: #121212;
     --border-color: #121212;
-    
     --primary-red: #D02020;
     --primary-blue: #1040C0;
     --primary-yellow: #F0C020;
   }
 
   body {
-    @apply antialiased selection:bg-[#121212] selection:text-white;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: #F0F0F0;
+    color: #121212;
     font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Extreme Typography Scale Setup */
   h1, h2, h3, h4, h5, h6 {
-    @apply uppercase font-black tracking-tighter leading-[0.9];
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+  }
+
+  ::selection {
+    background-color: #121212;
+    color: white;
   }
 }
 
-@layer utilities {
-  .bauhaus-border {
-    @apply border-2 md:border-4 border-[#121212];
-  }
+/* ─── Bauhaus Utility Classes ─────────────────────────────── */
 
-  .bauhaus-shadow-sm {
-    box-shadow: 4px 4px 0px 0px #121212;
-  }
-
-  .bauhaus-shadow-lg {
-    box-shadow: 8px 8px 0px 0px #121212;
-  }
-  
-  .bauhaus-shadow-none {
-    box-shadow: 0px 0px 0px 0px #121212;
-  }
-
-  .bauhaus-card {
-    @apply bg-white bauhaus-border bauhaus-shadow-lg rounded-none transition-transform duration-200 ease-out hover:-translate-y-1;
-  }
-
-  .bauhaus-button {
-    @apply rounded-none bauhaus-border bauhaus-shadow-sm transition-all duration-200 ease-out 
-           active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold uppercase tracking-widest flex items-center justify-center gap-2;
-  }
-
-  .bauhaus-input {
-    @apply w-full bg-white bauhaus-border rounded-none py-3 px-4 text-[#121212] placeholder-gray-500 
-           focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_#121212] transition-all duration-200 ease-out;
-  }
+.bauhaus-card {
+  background-color: white;
+  border: 4px solid #121212;
+  box-shadow: 8px 8px 0px 0px #121212;
+  border-radius: 0;
+  transition: transform 0.2s ease-out;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+.bauhaus-card:hover {
+  transform: translateY(-4px);
 }
-::-webkit-scrollbar-track {
-  background: var(--bg-color);
-  border-left: 2px solid var(--border-color);
+
+.bauhaus-button {
+  border-radius: 0;
+  border: 4px solid #121212;
+  box-shadow: 4px 4px 0px 0px #121212;
+  transition: all 0.2s ease-out;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
 }
-::-webkit-scrollbar-thumb {
-  background: var(--text-color); 
+
+.bauhaus-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
+
+.bauhaus-input {
+  width: 100%;
+  background-color: white;
+  border: 4px solid #121212;
+  border-radius: 0;
+  padding: 14px 20px;
+  color: #121212;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.2s ease-out;
+  outline: none;
+}
+
+.bauhaus-input::placeholder {
+  color: #888;
+  font-weight: 500;
+}
+
+.bauhaus-input:focus {
+  box-shadow: 4px 4px 0px 0px #121212;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: #F0F0F0; border-left: 2px solid #121212; }
+::-webkit-scrollbar-thumb { background: #121212; }
