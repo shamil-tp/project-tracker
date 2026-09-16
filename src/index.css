@@ -1,30 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap');
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    --bg-color: #F0F0F0;
+    --text-color: #121212;
+    --border-color: #121212;
+    
+    --primary-red: #D02020;
+    --primary-blue: #1040C0;
+    --primary-yellow: #F0C020;
+  }
+
   body {
-    @apply bg-[#FAFAFA] text-[#18181B] antialiased selection:bg-[#4F46E5] selection:text-white;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    @apply antialiased selection:bg-[#121212] selection:text-white;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* Extreme Typography Scale Setup */
+  h1, h2, h3, h4, h5, h6 {
+    @apply uppercase font-black tracking-tighter leading-[0.9];
   }
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-[#FFFFFF]/90 backdrop-blur-md border border-[#E4E4E7] shadow-sm;
+  .bauhaus-border {
+    @apply border-2 md:border-4 border-[#121212];
+  }
+
+  .bauhaus-shadow-sm {
+    box-shadow: 4px 4px 0px 0px #121212;
+  }
+
+  .bauhaus-shadow-lg {
+    box-shadow: 8px 8px 0px 0px #121212;
+  }
+  
+  .bauhaus-shadow-none {
+    box-shadow: 0px 0px 0px 0px #121212;
+  }
+
+  .bauhaus-card {
+    @apply bg-white bauhaus-border bauhaus-shadow-lg rounded-none transition-transform duration-200 ease-out hover:-translate-y-1;
+  }
+
+  .bauhaus-button {
+    @apply rounded-none bauhaus-border bauhaus-shadow-sm transition-all duration-200 ease-out 
+           active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold uppercase tracking-widest flex items-center justify-center gap-2;
+  }
+
+  .bauhaus-input {
+    @apply w-full bg-white bauhaus-border rounded-none py-3 px-4 text-[#121212] placeholder-gray-500 
+           focus:outline-none focus:ring-0 focus:shadow-[4px_4px_0px_0px_#121212] transition-all duration-200 ease-out;
   }
 }
 
-/* Custom scrollbar for better aesthetics */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAFAFA; 
+  background: var(--bg-color);
+  border-left: 2px solid var(--border-color);
 }
 ::-webkit-scrollbar-thumb {
-  background: #D4D4D8; 
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #A1A1AA; 
+  background: var(--text-color); 
 }

@@ -78,28 +78,28 @@ function App() {
   }, [students, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] font-sans text-[#18181B] p-4 md:p-8">
+    <div className="min-h-screen bg-[#F0F0F0] font-sans pb-16">
       <Header />
       
-      <main className="max-w-7xl mx-auto">
+      <main className="max-w-7xl mx-auto px-4 md:px-8">
         {loading ? (
-          <div className="space-y-8 animate-pulse">
+          <div className="space-y-12 animate-pulse">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-32 bg-gray-200 rounded-2xl border border-[#E4E4E7]"></div>
+                <div key={i} className="h-40 bg-gray-300 border-4 border-[#121212] shadow-[8px_8px_0px_0px_#121212]"></div>
               ))}
             </div>
-            <div className="h-20 bg-gray-200 rounded-2xl border border-[#E4E4E7]"></div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="h-24 bg-gray-300 border-4 border-[#121212] shadow-[8px_8px_0px_0px_#121212]"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-64 bg-gray-200 rounded-2xl border border-[#E4E4E7]"></div>
+                <div key={i} className="h-80 bg-gray-300 border-4 border-[#121212] shadow-[8px_8px_0px_0px_#121212]"></div>
               ))}
             </div>
           </div>
         ) : error ? (
-          <div className="glass border-rose-500 bg-rose-50 p-8 rounded-2xl text-center">
-            <h2 className="text-xl font-bold text-rose-700 mb-2">Error Loading Dashboard</h2>
-            <p className="text-rose-600">{error}</p>
+          <div className="bg-[#D02020] border-4 border-[#121212] shadow-[8px_8px_0px_0px_#121212] p-8 text-center text-white">
+            <h2 className="text-3xl font-black uppercase tracking-tighter mb-4">Error Loading Data</h2>
+            <p className="text-lg font-bold">{error}</p>
           </div>
         ) : (
           <>
@@ -109,14 +109,14 @@ function App() {
               setSearchQuery={setSearchQuery}
             />
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredStudents.length > 0 ? (
                 filteredStudents.map((student, idx) => (
-                  <StudentCard key={idx} student={student} />
+                  <StudentCard key={idx} index={idx} student={student} />
                 ))
               ) : (
-                <div className="col-span-full py-12 text-center text-[#71717A]">
-                  No projects found matching your search.
+                <div className="col-span-full py-16 bg-white border-4 border-[#121212] text-center shadow-[8px_8px_0px_0px_#121212]">
+                  <h3 className="text-2xl font-bold uppercase tracking-widest text-[#121212]">No Projects Found</h3>
                 </div>
               )}
             </div>

@@ -1,14 +1,20 @@
 import React from 'react';
 import { Users, Github, BookOpen } from 'lucide-react';
 
-const StatCard = ({ title, value, icon: Icon, colorClass }) => (
-  <div className="glass rounded-2xl p-6 flex items-center gap-4 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-default bg-[#FFFFFF]">
-    <div className={`p-4 rounded-xl ${colorClass.bg}`}>
-      <Icon className={`w-6 h-6 ${colorClass.text}`} />
+const StatCard = ({ title, value, icon: Icon, bgClass, textColorClass, iconBgClass }) => (
+  <div className={`bauhaus-card p-6 md:p-8 flex flex-col justify-between ${bgClass} group`}>
+    <div className="flex justify-between items-start mb-6">
+      <h3 className={`text-xl md:text-2xl font-bold uppercase tracking-wider ${textColorClass} border-b-4 border-current pb-2 inline-block`}>
+        {title}
+      </h3>
+      <div className={`border-4 border-[#121212] p-3 shadow-[4px_4px_0px_0px_#121212] ${iconBgClass} rounded-full group-hover:scale-110 group-hover:rotate-12 transition-transform duration-200`}>
+        <Icon className="w-8 h-8 text-[#121212]" strokeWidth={3} />
+      </div>
     </div>
     <div>
-      <p className="text-sm text-[#71717A] font-medium">{title}</p>
-      <p className="text-2xl font-bold text-[#18181B]">{value}</p>
+      <p className={`text-7xl md:text-8xl font-black ${textColorClass} tracking-tighter drop-shadow-[4px_4px_0_#121212]`}>
+        {value}
+      </p>
     </div>
   </div>
 );
@@ -19,24 +25,30 @@ const StatsOverview = ({ students }) => {
   const totalUsersRoles = students.reduce((sum, s) => sum + (s["total-number-of-users"] || 0), 0);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16">
       <StatCard 
-        title="Total Submissions" 
+        title="Submissions" 
         value={total} 
         icon={Users}
-        colorClass={{ bg: 'bg-indigo-50', text: 'text-[#4F46E5]' }}
+        bgClass="bg-[#F0C020]" 
+        textColorClass="text-[#121212]"
+        iconBgClass="bg-white"
       />
       <StatCard 
-        title="Repositories Linked" 
+        title="Repositories" 
         value={withGithub} 
         icon={Github}
-        colorClass={{ bg: 'bg-sky-50', text: 'text-[#0EA5E9]' }}
+        bgClass="bg-[#1040C0]" 
+        textColorClass="text-white"
+        iconBgClass="bg-[#F0C020]"
       />
       <StatCard 
-        title="Total Roles Modeled" 
+        title="Roles Defined" 
         value={totalUsersRoles} 
         icon={BookOpen}
-        colorClass={{ bg: 'bg-emerald-50', text: 'text-emerald-600' }}
+        bgClass="bg-[#D02020]" 
+        textColorClass="text-white"
+        iconBgClass="bg-white"
       />
     </div>
   );
