@@ -36,7 +36,8 @@ function App() {
         const API_URL = import.meta.env.VITE_GOOGLE_SHEETS_API_URL;
 
         if (API_URL) {
-          const res = await fetch(API_URL);
+          // const res = await fetch(API_URL);
+          const res = await fetch(`${API_URL}?ts=${Date.now()}`);
           if (!res.ok) {
             throw new Error(`HTTP ${res.status}: Failed to fetch from Google Sheets endpoint`);
           }
